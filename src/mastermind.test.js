@@ -1,6 +1,6 @@
 const colors = require('./colors')
 
-const { pickColor } = require('./mastermind');
+const { pickColor, generateCode } = require('./mastermind');
 
 describe('mastermind', () => {
 	
@@ -39,7 +39,26 @@ describe('mastermind', () => {
 
 		});
 		
-	})
+	}),
+
+
+
+		describe('generateCode', () => {
+			it('should return 4 colors', () => {
+				expect(generateCode().length).toEqual(4);
+			});
+
+			
+
+			it('should return 4 colors based on the random function', () => {
+				const code = generateCode();
+				console.log(code)
+				expect(code).toEqual(code);
+
+			});
+		});
+
+	
 
 
 

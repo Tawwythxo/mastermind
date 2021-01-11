@@ -1,7 +1,8 @@
 const colors = require('./colors')
 
 function getRandom() {
-    return Math.random()
+    let zufall = Math.random();
+    return zufall;
 }
 
 function pickColor(getRandom) {
@@ -35,7 +36,27 @@ function pickColor(getRandom) {
 }
 
 
+function generateCode() {
+    
+    let farbcode = [];
+    for (var i = 0; i <= 3; i++) {
+
+        farbcode[i] = pickColor(getRandom);
+
+        while (farbcode[i] === farbcode[i - 1] || farbcode[i] === farbcode[i - 2] || farbcode[i] === farbcode[i - 3]) {
+            farbcode[i] = pickColor(getRandom);
+        }
+
+    }
+    return farbcode;
+ 
+
+}
+
+
+
 module.exports = {
     getRandom,
-    pickColor
+    pickColor,
+    generateCode
 }
