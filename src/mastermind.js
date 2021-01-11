@@ -6,7 +6,13 @@ function getRandom() {
 
 function pickColor(getRandom) {
     let randomNumber = getRandom();
-    console.log(randomNumber);
+
+    if (randomNumber >= 1.0) {
+        let safety = randomNumber - Math.trunc(randomNumber);
+        randomNumber = safety.toFixed(3);
+
+    }
+
     if (randomNumber < 0.125) {
         return colors.RED
     } else if (randomNumber >= 0.125 && randomNumber < 0.25) {
@@ -23,8 +29,8 @@ function pickColor(getRandom) {
         return colors.PINK;
     } else if (randomNumber >= 0.875 && randomNumber < 1.00) {
         return colors.BROWN;
-    }
-    throw new Error('Invalid random function');
+    } 
+   
    
 }
 

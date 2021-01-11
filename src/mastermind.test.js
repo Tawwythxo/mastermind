@@ -5,9 +5,11 @@ const { pickColor } = require('./mastermind');
 describe('mastermind', () => {
 	
 	describe('pickColor', () => {
+
 		it('take a random number and return color based on that', () => {
 			expect(pickColor(() => 0.1)).toEqual(colors.RED)
 			expect(pickColor(() => 0.5)).toEqual(colors.PURPLE)
+
 		});
 
 		[
@@ -28,11 +30,15 @@ describe('mastermind', () => {
 
 		})
 
-		it('should throw on function that return more than 1.0', () => {
-			expect(() => {
-				pickColor(() => 1.0)
-			}).toThrow()
-		})
+
+		it('should prevent Exceptions if the value is >= 1.0 and return the color fitting to the last digits', () => {
+			expect(pickColor(() => 1.000)).toEqual(colors.RED)
+			expect(pickColor(() => 100.3258)).toEqual(colors.YELLOW)
+			expect(pickColor(() => 4.485)).toEqual(colors.BLUE)
+			expect(pickColor(() => 15.56)).toEqual(colors.PURPLE)
+
+		});
+		
 	})
 
 
