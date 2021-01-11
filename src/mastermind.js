@@ -1,4 +1,5 @@
 const colors = require('./colors')
+const hints = require('./hints')
 
 function getRandom() {
     let zufall = Math.random();
@@ -53,10 +54,29 @@ function generateCode() {
 
 }
 
+function checkCode(code, guess) {
+    const result = [];
+
+    for (var i = 0; i <= 3; i++) {
+        if (code[i] === guess[i]) {
+            result.push(hints.FITS)
+        } else if (code.indexOf(guess[i]) !== -1) {
+
+            result.push(hints.PARTIALLY)
+
+        } else {
+            result.push(hints.WRONG)
+
+        }
+    }
+    return result
+
+}
 
 
 module.exports = {
     getRandom,
     pickColor,
-    generateCode
+    generateCode,
+    checkCode
 }

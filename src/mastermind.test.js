@@ -1,6 +1,7 @@
 const colors = require('./colors')
+const hints = require('./hints')
 
-const { pickColor, generateCode } = require('./mastermind');
+const { pickColor, generateCode, checkCode } = require('./mastermind');
 
 describe('mastermind', () => {
 	
@@ -52,7 +53,6 @@ describe('mastermind', () => {
 
 			it('should return 4 colors based on the random function', () => {
 				const code = generateCode();
-				console.log(code)
 				expect(code).toEqual(code);
 
 			});
@@ -60,7 +60,44 @@ describe('mastermind', () => {
 
 	
 
+	describe('checkCode', () => {
+		it('should turn code and guess into hints when all diverge', () => {
+			expect(checkCode(
+				[colors.RED, colors.GREEN, colors.YELLOW, colors.BLUE],
+				[colors.PURPLE, colors.ORANGE, colors.PINK, colors.BROWN]
+			)).toEqual([hints.WRONG, hints.WRONG, hints.WRONG, hints.WRONG])
+		})
 
+		it('should turn code and guess into hints when all colors are equal', () => {
+			expect(checkCode(
+				[colors.RED, colors.GREEN, colors.YELLOW, colors.BLUE],
+				[colors.RED, colors.GREEN, colors.YELLOW, colors.BLUE]
+			)).toEqual([hints.FITS, hints.FITS, hints.FITS, hints.FITS])
+		})
+
+		it('should turn code and guess into hints when the colors are not correctly placed', () => {
+			expect(checkCode(
+				[colors.RED, colors.GREEN, colors.YELLOW, colors.BLUE],
+				[colors.GREEN, colors.RED, colors.BLUE, colors.YELLOW]
+			)).toEqual([hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY])
+		})
+
+		it('should turn code and guess into hints when the colors are not correctly placed', () => {
+			expect(checkCode(
+				[colors.RED, colors.GREEN, colors.YELLOW, colors.BLUE],
+				[colors.GREEN, colors.YELLOW, colors.BROWN, colors.BLUE]
+			)).toEqual([hints.PARTIALLY, hints.PARTIALLY, hints.WRONG, hints.FITS])
+		})
+
+		it('should turn code and guess into hints when the colors are not correctly placed', () => {
+			expect(checkCode(
+				[colors.YELLOW, colors.GREEN, colors.RED, colors.PINK],
+				[colors.YELLOW, colors.GREEN, colors.BROWN, colors.RED]
+			)).toEqual([hints.FITS, hints.FITS, hints.WRONG, hints.PARTIALLY])
+		})
+
+
+	});
 
 
 });
