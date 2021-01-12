@@ -52,8 +52,7 @@ describe('mastermind', () => {
 			
 
 			it('should return 4 colors based on the random function', () => {
-				const code = generateCode();
-				expect(code).toEqual(code);
+				expect(generateCode()).not.toEqual(generateCode());
 
 			});
 		});
