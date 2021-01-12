@@ -1,7 +1,7 @@
 const colors = require('./colors')
 const hints = require('./hints')
 
-const { pickColor, generateCode, checkCode } = require('./mastermind');
+const { pickColor, generateCode, checkCode, scrumble} = require('./mastermind');
 
 describe('mastermind', () => {
 	
@@ -49,11 +49,10 @@ describe('mastermind', () => {
 				expect(generateCode().length).toEqual(4);
 			});
 
-			
 
 			it('should return 4 colors based on the random function', () => {
-				const code = generateCode();
-				expect(code).toEqual(code);
+				
+				expect(generateCode()).not.toEqual(generateCode());
 
 			});
 		});
@@ -98,6 +97,32 @@ describe('mastermind', () => {
 
 
 	});
+
+
+
+	describe('scrumble', () => {
+
+		it('should shuffle the array', () => {
+			expect(scrumble(
+				[colors.RED, colors.GREEN, colors.YELLOW, colors.BLUE],
+				[colors.GREEN, colors.YELLOW, colors.BROWN, colors.BLUE]
+			)).not.toEqual([hints.PARTIALLY, hints.PARTIALLY, hints.WRONG, hints.FITS])
+		})
+
+		it('should shuffle the array', () => {
+			expect(scrumble(
+				[colors.YELLOW, colors.GREEN, colors.RED, colors.PINK],
+				[colors.YELLOW, colors.GREEN, colors.BROWN, colors.RED]
+			)).not.toEqual([hints.FITS, hints.FITS, hints.WRONG, hints.PARTIALLY])
+		})
+	});
+
+
+
+
+
+
+
 
 
 });

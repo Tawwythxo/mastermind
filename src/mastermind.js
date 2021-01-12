@@ -54,23 +54,45 @@ function generateCode() {
 
 }
 
+
+
 function checkCode(code, guess) {
     const result = [];
+   
+    for (var i = 0; i <= 3; i++) {
+        if (code[i] === guess[i]) {
+            result.push(hints.FITS)
+        } else if (code.indexOf(guess[i]) !== -1) {
+            result.push(hints.PARTIALLY)
+        } else {
+            result.push(hints.WRONG)
+        }
+
+    }
+    return result 
+
+
+}
+
+function scrumble(code, guess, randomfn) {
+    var result = [];
 
     for (var i = 0; i <= 3; i++) {
         if (code[i] === guess[i]) {
             result.push(hints.FITS)
         } else if (code.indexOf(guess[i]) !== -1) {
-
             result.push(hints.PARTIALLY)
-
         } else {
             result.push(hints.WRONG)
-
         }
+
+    }
+
+    for (var i = result.length - 1; i > 0; i--) {
+        var random = Math.floor(Math.random() * (i + 1));
+        [result[i], result[random]] = [result[random], result[i]]
     }
     return result
-
 }
 
 
@@ -78,5 +100,6 @@ module.exports = {
     getRandom,
     pickColor,
     generateCode,
-    checkCode
+    checkCode,
+    scrumble
 }
