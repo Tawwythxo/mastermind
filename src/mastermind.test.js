@@ -7,7 +7,7 @@ const { pickColor, generateCode, checkCode, scrumble, runden, inputPlayer, gameP
 
 describe('mastermind', () => {
 	
-	/*describe('pickColor', () => {
+	describe('pickColor', () => {
 
 		it('take a random number and return color based on that', () => {
 			expect(pickColor(() => 0.1)).toEqual(colors.RED)
@@ -66,7 +66,6 @@ describe('mastermind', () => {
 
 	});
 
-*/
 	
 
 	describe('checkCode', () => {
@@ -114,7 +113,7 @@ describe('mastermind', () => {
 
 	});
 
-	/*
+	
 
 	describe('scrumble', () => {
 
@@ -133,14 +132,10 @@ describe('mastermind', () => {
 		})
 	});
 
-*/
+
 
 	describe('mastermindGame', () => {
 	
-
-		/*it('should fill the array rounds with the guesses from the different rounds', () => {
-			expect(startGame())
-		})*/
 		
 		describe('inputPlayer', () => {
 			[
