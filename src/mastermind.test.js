@@ -1,11 +1,13 @@
 const colors = require('./colors')
 const hints = require('./hints')
+const gameProgress = require('./gameProgress')
 
-const { pickColor, generateCode, checkCode, scrumble} = require('./mastermind');
+
+const { pickColor, generateCode, checkCode, scrumble, runden, inputPlayer, gamePlay, mastermindGameResult, arraysAreIdentical} = require('./mastermind');
 
 describe('mastermind', () => {
 	
-	describe('pickColor', () => {
+	/*describe('pickColor', () => {
 
 		it('take a random number and return color based on that', () => {
 			expect(pickColor(() => 0.1)).toEqual(colors.RED)
@@ -43,20 +45,28 @@ describe('mastermind', () => {
 	}),
 
 
-
-		describe('generateCode', () => {
-			it('should return 4 colors', () => {
-				expect(generateCode().length).toEqual(4);
-			});
-
-
-			it('should return 4 colors based on the random function', () => {
-				
-				expect(generateCode()).not.toEqual(generateCode());
-
-			});
+	describe('generateCode', () => {
+		it('should return 4 colors', () => {
+			expect(generateCode().length).toEqual(4);
 		});
 
+
+		it('should return 4 colors based on the random function', () => {
+			expect(generateCode()).not.toEqual(generateCode());
+		});
+
+
+		it('should generate a random CODE and if it fullfills the condition it is replaced by a fakeCode', () => {
+			let fakeCode = generateCode()
+			if (fakeCode.length === 4) {
+				fakeCode = [colors.RED, colors.GREEN, colors.YELLOW, colors.BLUE];
+			}
+			expect(fakeCode).toEqual([colors.RED, colors.GREEN, colors.YELLOW, colors.BLUE]);
+		});
+
+	});
+
+*/
 	
 
 	describe('checkCode', () => {
@@ -95,10 +105,16 @@ describe('mastermind', () => {
 			)).toEqual([hints.FITS, hints.FITS, hints.WRONG, hints.PARTIALLY])
 		})
 
+		it('should turn code and guess into hints when the colors are not correctly placed', () => {
+			expect(checkCode(
+				[colors.YELLOW, colors.GREEN, colors.PURPLE, colors.BLUE],
+				[colors.BROWN, colors.GREEN, colors.YELLOW, colors.BLUE]
+			)).toEqual([hints.WRONG, hints.FITS, hints.PARTIALLY, hints.FITS])
+		})
 
 	});
 
-
+	/*
 
 	describe('scrumble', () => {
 
@@ -117,12 +133,101 @@ describe('mastermind', () => {
 		})
 	});
 
+*/
+
+	describe('mastermindGame', () => {
+	
+
+		/*it('should fill the array rounds with the guesses from the different rounds', () => {
+			expect(startGame())
+		})*/
+		
+		describe('inputPlayer', () => {
+			[
+				{ guess: "RRRR", converted: [colors.RED, colors.RED, colors.RED, colors.RED] },
+				{ guess: "RSPO", converted: [colors.RED, colors.BROWN, colors.PINK, colors.ORANGE] },
+				{ guess: "RGYL", converted: [colors.RED, colors.GREEN, colors.YELLOW, colors.PURPLE] },
+				{ guess: "YSPO", converted: [colors.YELLOW, colors.BROWN, colors.PINK, colors.ORANGE] },
+				{ guess: "BLOP", converted: [colors.BLUE, colors.PURPLE, colors.ORANGE, colors.PINK] },
+				{ guess: "SGYB", converted: [colors.BROWN, colors.GREEN, colors.YELLOW, colors.BLUE] },
+				{ guess: "RSPL", converted: [colors.RED, colors.BROWN, colors.PINK, colors.PURPLE] },
+
+			].forEach(({ converted, guess }) => {
+
+				it(`should return ${converted} for the player guess ${guess}`, () => {
+					expect(inputPlayer(guess)).toEqual(converted)
+				})
+
+			})
+		});
 
 
 
+		describe('gamePlay', () => {
+			it('gameplay', () => {
+				expect(gamePlay(inputPlayer([colors.RED, colors.BROWN, colors.PINK, colors.PURPLE])))
+					.not.toEqual([hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY]);
+			})
+			
+		});
 
+		describe('mastermindGameResult', () => {
+			it('should return LOST after 12 rounds not guessing the correct code', () => {
+				expect(mastermindGameResult(runden(12),
+					inputPlayer([hints.WRONG, hints.WRONG, hints.WRONG, hints.WRONG],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+					[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY])
+				)).toEqual(gameProgress.LOST);
+			})
 
+			it('should return PENDING midround while still guessing the correct code', () => {
+				expect(mastermindGameResult(runden(5),
+					inputPlayer([hints.WRONG, hints.WRONG, hints.WRONG, hints.WRONG],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.FITS, hints.FITS, hints.FITS, hints.FITS]))
+				).toEqual(gameProgress.PENDING);
+			})
 
+			it('should return WON after guessing the correct code', () => {
+				expect(mastermindGameResult(runden(11),
+					inputPlayer([hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY, hints.PARTIALLY],
+						[hints.FITS, hints.FITS, hints.FITS, hints.FITS]))
+				).toEqual(gameProgress.WON);
+
+			})
+		});
+	
+
+	});
+	
 
 
 });
